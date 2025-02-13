@@ -40,8 +40,8 @@ function randColor() {
   /* Vi klipper vekk desimalverdier */
   color = color.split(".")[0];
 
-  /* Vi passer her på å legge på et 0 tall i første posisjon hvis tallet bare har lengde 5. */
-  if (color.length === 5) color = "0" + color;
+  /* Vi passer her på å legge på å padde begynnelsen med 0 tall hvis tallet bare har lengde under 6. */
+  color.padStart(6, "0");
 
   /* Vi genererer så et tall array av rgb verdier basert på fargen generert.  */
   let colorArray = splitHexColorString(color, 2);
@@ -72,7 +72,7 @@ function calculateColorDistance(rgbArray1, rgbArray2) {
 
   /* vi looper så gjennom ene arrayet */
   for (let i = 0; i < rgbArray1.length; i++) {
-    /* Vi tar ene elementet, minus tilsvarende index i andre elementet, for å finne distansen mellom hver fargeverdi */
+    /* Vi tar ene elementet, minus tilsvarende index i andre elementet, for å finne distansen mellom hver fargeverdi. legg merke til Math.abs() for å kunne ignorere + eller - */
     distanceSum += Math.abs(rgbArray1[i] - rgbArray2[i]);
   }
 
