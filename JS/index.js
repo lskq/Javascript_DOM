@@ -15,95 +15,81 @@ event listeneres skal "lytte" etter hvisse events i htmlen vår.
 et "click" event er en event hvor elementet blir "clicket" eller trykket på.  
 
 Vi har også laget en event listener for vinduet i helhet, her kan vi lytte etter vinduspesifikke events som "keydown" events, aka at en tastaturknapp blir trykket på.*/
-colorButton.addEventListener("click", ()=>{
-
-    /* Her sier vi at outputTexten sin farge skal være lik randColor funksjonen vår.  */
-    outputText.style.color = randColor();
-})
-textSwapper.addEventListener("click", ()=>{
-
-    /* Her sier vi at når vi trykker på textSwapper knappen, så skal vi bruke swapInputText funksjonen vår for å swappe tekstverdien i tekst inputen vår til outputen vår. */
-    swapInputText();
-})
-window.addEventListener("keydown", (event)=>{
-
-    /* Her ser vi etter en enter tast, for å kjøre samme swapInputText funksjon. */
-    if (event.key === "Enter")
-        swapInputText();
-    return;
-})
-
+colorButton.addEventListener("click", () => {
+  /* Her sier vi at outputTexten sin farge skal være lik randColor funksjonen vår.  */
+  outputText.style.color = randColor();
+});
+textSwapper.addEventListener("click", () => {
+  /* Her sier vi at når vi trykker på textSwapper knappen, så skal vi bruke swapInputText funksjonen vår for å swappe tekstverdien i tekst inputen vår til outputen vår. */
+  swapInputText();
+});
+window.addEventListener("keydown", (event) => {
+  /* Her ser vi etter en enter tast, for å kjøre samme swapInputText funksjon. */
+  if (event.key === "Enter") swapInputText();
+  return;
+});
 
 /* Her er en funksjon som genererer en random farge i god kontrast med bakgrunnsfargen i root variablen bgColor. */
-function randColor()
-{
-    /* Vi lager et array av rgb verdier av bakgrunnsfargen vår. */
-    let backgroundColorArray = splitHexColorString(bgColor.slice(1, 7), 2);
+function randColor() {
+  /* Vi lager et array av rgb verdier av bakgrunnsfargen vår. */
+  let backgroundColorArray = splitHexColorString(bgColor.slice(1, 7), 2);
 
-    /* Vi genererer en random fargeverdi */
-    let color = (Math.random() * 0xffffff).toString(16);
-    
-    /* Vi klipper vekk desimalverdier */
-    color = color.split(".")[0];
+  /* Vi genererer en random fargeverdi */
+  let color = (Math.random() * 0xffffff).toString(16);
 
-    /* Vi passer her på å legge på et 0 tall i første posisjon hvis tallet bare har lengde 5. */
-    if (color.length === 5) color = "0" + color;
+  /* Vi klipper vekk desimalverdier */
+  color = color.split(".")[0];
 
-    /* Vi genererer så et tall array av rgb verdier basert på fargen generert.  */
-    let colorArray = splitHexColorString(color, 2);
+  /* Vi passer her på å legge på et 0 tall i første posisjon hvis tallet bare har lengde 5. */
+  if (color.length === 5) color = "0" + color;
 
-    /* Vi skjekker distansen (kontrasten) mellom bg color og fargen generert. */
-    let distance = calculateColorDistance(colorArray, backgroundColorArray);
+  /* Vi genererer så et tall array av rgb verdier basert på fargen generert.  */
+  let colorArray = splitHexColorString(color, 2);
 
-    /* Hvis kontrasten er for liten, kjør funksjonen vår på nytt via rekursjon (aka kjøre seg selv på nytt.) legg merke til Math.abs() for å kunne ignorere + eller - */
-    if (Math.abs(distance) < maxDistanceBetweenColors) return randColor();
+  /* Vi skjekker distansen (kontrasten) mellom bg color og fargen generert. */
+  let distance = calculateColorDistance(colorArray, backgroundColorArray);
 
-    /* Eller returner en tekst streng som representerer css verdien av vår random farge.  */
-    return "#" + color;
+  /* Hvis kontrasten er for liten, kjør funksjonen vår på nytt via rekursjon (aka kjøre seg selv på nytt.) */
+  if (distance < maxDistanceBetweenColors) return randColor();
+
+  /* Eller returner en tekst streng som representerer css verdien av vår random farge.  */
+  return "#" + color;
 }
 
 /* Her er en funksjon som swapper teksten i outputText til textInput sin verdi */
-function swapInputText()
-{
-    let input = textInput.value;
+function swapInputText() {
+  let input = textInput.value;
 
-    /* Her passer vi på å ikke gjøre noe, hvis vår input ikke har noen verdi.  */
-    if (input === null || input === "") return;
-    outputText.textContent = input;
+  /* Her passer vi på å ikke gjøre noe, hvis vår input ikke har noen verdi.  */
+  if (input === null || input === "") return;
+  outputText.textContent = input;
 }
 
-
 /* Her er en funksjon som tar inn to tall arrays, og kalkulerer "avstanden" mellom de (aka hvor langt fra 0 er totalverdien av de) */
-function calculateColorDistance(rgbArray1, rgbArray2)
-{
+function calculateColorDistance(rgbArray1, rgbArray2) {
+  /* Vi starter distansekalkulasjonen vår ved å ha tallet 0. */
+  let distanceSum = 0;
 
-    /* Vi starter distansekalkulasjonen vår ved å ha tallet 0. */
-    let distanceSum = 0;
+  /* vi looper så gjennom ene arrayet */
+  for (let i = 0; i < rgbArray1.length; i++) {
+    /* Vi tar ene elementet, minus tilsvarende index i andre elementet, for å finne distansen mellom hver fargeverdi */
+    distanceSum += Math.abs(rgbArray1[i] - rgbArray2[i]);
+  }
 
-    /* vi looper så gjennom ene arrayet */
-    for (let i = 0; i < rgbArray1.length; i++)
-    {
-
-        /* Vi tar ene elementet, minus tilsvarende index i andre elementet, for å finne distansen mellom hver fargeverdi */
-        distanceSum += (rgbArray1[i] - rgbArray2[i])
-    }
-
-    /* vi returnerer så totaldistansen av hele fargen. */
-    return distanceSum;
+  /* vi returnerer så totaldistansen av hele fargen. */
+  return distanceSum;
 }
 
 /* Her er en funksjon som tar in en tekstreng som input, og hvor mange karakterer vi skal splitte. */
-function splitHexColorString(input, charCount)
-{
-    let outputArr = []
-    /* Her lager vi en loop for å slice ut stykker av input strengen vår. */
-    for (let i = 0; i < input.length; i += charCount)
-    {
-        let slice = input.slice(i, i + charCount);
+function splitHexColorString(input, charCount) {
+  let outputArr = [];
+  /* Her lager vi en loop for å slice ut stykker av input strengen vår. */
+  for (let i = 0; i < input.length; i += charCount) {
+    let slice = input.slice(i, i + charCount);
 
-        /* Her prøver vi å parse ut slicen til en tallverdi, vi må huske å si til parseint at de skal tolke teksten som et heksadesimalt tall, via 16 tallet. */
-        let num = Number.parseInt(slice, 16);
-        outputArr.push(num);
-    }
-    return outputArr;
+    /* Her prøver vi å parse ut slicen til en tallverdi, vi må huske å si til parseint at de skal tolke teksten som et heksadesimalt tall, via 16 tallet. */
+    let num = Number.parseInt(slice, 16);
+    outputArr.push(num);
+  }
+  return outputArr;
 }
