@@ -10,6 +10,7 @@ body{
     width: 100vw;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     letter-spacing: 1.2;
+    background-color: antiquewhite;
 }
 h1{
     font-size: 3rem;
@@ -25,21 +26,26 @@ h1{
 
 button{
     background-color: inherit;
-    border-top: 0.1rem solid black;
-    border-left: 0.1rem solid black;
-    border-bottom: 0.2rem solid black;
-    border-right: 0.2rem solid black;
+    border: 0.1rem solid black;
+    box-shadow: inset black -0.1rem -0.1rem;
     font: inherit;
-    padding: 0.2rem 0.5rem;
+    padding: 0.1rem 0.5rem 0.2rem 0.5rem;
     transition: 150ms ease-in-out;
 }
 button:hover{
     cursor: pointer;
-    border-top: 0.2rem solid black;
-    border-left: 0.2rem solid black;
-    border-right: 0.1rem solid black;
-    border-bottom: 0.1rem solid black;
+    transform: translate(0.1rem, 0.1rem);
+    box-shadow: inset black 0.1rem 0.1rem;
+    padding: 0.2rem 0.5rem 0.1rem 0.5rem;
 }
 input{
     padding: 0.4rem 1rem;
+    background-color: inherit;
+    border: 0.1rem solid black;
+}
+input:focus{
+    outline: none;
+}
+input:hover{
+    cursor: pointer;
 }
